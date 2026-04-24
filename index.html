@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Neel Infratech – Turning Nagpur's Land into Landmarks</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --navy:#0F172A;
+    --gold:#EAB308;
+    --green:#22C55E;
+    --bg:#F8FAFC;
+    --text:#0B0B0B;
+    --muted:#64748B;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);}
+
+  /* NAVBAR */
+  #navbar{position:fixed;top:0;left:0;right:0;z-index:1000;transition:all .4s ease;}
+  #navbar.scrolled{background:rgba(15,23,42,0.97);backdrop-filter:blur(20px);box-shadow:0 4px 30px rgba(0,0,0,.3);}
+  #navbar.top{background:transparent;}
+
+  /* HERO */
+  .hero-bg{
+    background:linear-gradient(to bottom right,rgba(15,23,42,0.85),rgba(15,23,42,0.6)),
+    url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1800&q=80") center/cover no-repeat;
+    min-height:100vh;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes pulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  @keyframes scrollBounce{0%,100%{transform:translateY(0);opacity:1}50%{transform:translateY(8px);opacity:.5}}
+  .fade-up{animation:fadeUp .8s ease forwards;}
+  .delay-1{animation-delay:.2s;}
+  .delay-2{animation-delay:.4s;}
+  .delay-3{animation-delay:.6s;}
+  .delay-4{animation-delay:.8s;}
+
+  /* CARD HOVER */
+  .card-hover{transition:transform .3s ease,box-shadow .3s ease;}
+  .card-hover:hover{transform:translateY(-8px);box-shadow:0 24px 48px rgba(0,0,0,.15);}
+
+  /* GALLERY */
+  .gallery-img{overflow:hidden;border-radius:1rem;}
+  .gallery-img img{transition:transform .5s ease;width:100%;height:100%;object-fit:cover;}
+  .gallery-img:hover img{transform:scale(1.08);}
+
+  /* TESTIMONIAL SLIDER */
+  .testimonial-track{display:flex;transition:transform .5s ease;}
+
+  /* GOLD BTN */
+  .btn-gold{background:var(--gold);color:#000;font-weight:700;border-radius:50px;transition:all .3s;}
+  .btn-gold:hover{background:#ca9a06;transform:scale(1.05);box-shadow:0 8px 24px rgba(234,179,8,.4);}
+  .btn-outline{border:2px solid #fff;color:#fff;border-radius:50px;transition:all .3s;}
+  .btn-outline:hover{background:#fff;color:#0F172A;}
+
+  /* DIRECTOR CARD */
+  .dir-card{position:relative;overflow:hidden;border-radius:1.5rem;}
+  .dir-card::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(15,23,42,.95) 100%);z-index:1;}
+  .dir-card img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .5s;}
+  .dir-card:hover img{transform:scale(1.05);}
+  .dir-card-content{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:1.5rem;}
+
+  /* SECTION TITLE */
+  .section-label{color:var(--gold);font-weight:600;letter-spacing:.15em;text-transform:uppercase;font-size:.8rem;}
+  .section-title{font-family:"Playfair Display",serif;font-weight:900;line-height:1.15;}
+
+  /* PROP CARD */
+  .prop-card{border-radius:1.5rem;overflow:hidden;background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.08);}
+  .prop-card img{width:100%;height:220px;object-fit:cover;transition:transform .5s;}
+  .prop-card:hover img{transform:scale(1.06);}
+
+  /* MOBILE MENU */
+  #mobile-menu{max-height:0;overflow:hidden;transition:max-height .4s ease;}
+  #mobile-menu.open{max-height:400px;}
+
+  /* STATS */
+  .stat-num{font-family:"Playfair Display",serif;font-size:3rem;font-weight:900;color:var(--gold);}
+
+  /* SCROLL INDICATOR */
+  .scroll-dot{width:24px;height:40px;border:2px solid rgba(255,255,255,.6);border-radius:20px;display:flex;justify-content:center;padding-top:6px;}
+  .scroll-dot span{width:4px;height:8px;background:#fff;border-radius:4px;animation:scrollBounce 1.5s infinite;}
+
+  /* WHATSAPP FLOAT */
+  .wa-btn{position:fixed;bottom:2rem;right:2rem;z-index:999;background:#25D366;border-radius:50%;width:56px;height:56px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(37,211,102,.4);transition:transform .3s;}
+  .wa-btn:hover{transform:scale(1.1);}
+
+  /* MISSION CARD */
+  .mission-item{border-left:3px solid var(--gold);padding-left:1.2rem;}
+
+  /* TESTIMONIAL */
+  .testi-card{background:#fff;border-radius:1.5rem;padding:2rem;box-shadow:0 4px 24px rgba(0,0,0,.07);}
+  .stars{color:var(--gold);}
+
+  /* INPUT */
+  input,textarea{outline:none;transition:border-color .3s;}
+  input:focus,textarea:focus{border-color:var(--gold)!important;}
+</style>
+</head>
+<body>
+
+<!-- WHATSAPP FLOAT -->
+<a href="https://wa.me/919226537230" target="_blank" class="wa-btn" aria-label="WhatsApp">
+  <svg width="28" height="28" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- TOP STRIP -->
+<div style="background:var(--navy);color:#fff;" class="py-2 text-sm">
+  <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <svg width="14" height="14" fill="#EAB308" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+      <a href="tel:+919226537230" class="hover:text-yellow-400 transition-colors">+91 9226537230</a>
+    </div>
+    <div class="flex items-center gap-4">
+      <a href="#" aria-label="Facebook" class="hover:text-yellow-400 transition-colors">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </a>
+      <a href="#" aria-label="Instagram" class="hover:text-yellow-400 transition-colors">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      </a>
+      <a href="#" aria-label="YouTube" class="hover:text-yellow-400 transition-colors">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav id="navbar" class="top">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <!-- LEFT: Menu links -->
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#about" class="text-white hover:text-yellow-400 transition-colors font-medium text-sm tracking-wide">Our Story</a>
+      <a href="#why" class="text-white hover:text-yellow-400 transition-colors font-medium text-sm tracking-wide">Why Choose Us</a>
+      <a href="#properties" class="text-white hover:text-yellow-400 transition-colors font-medium text-sm tracking-wide">Properties</a>
+    </div>
+
+    <!-- CENTER: Logo -->
+    <div class="absolute left-1/2 -translate-x-1/2">
+      <div class="text-center">
+        <div style="font-family:\'Playfair Display\',serif;font-size:1.4rem;font-weight:900;color:#fff;letter-spacing:.05em;line-height:1;">
+          NEEL <span style="color:var(--gold);">INFRATECH</span>
+        </div>
+        <div style="font-size:.6rem;color:rgba(255,255,255,.6);letter-spacing:.2em;text-transform:uppercase;margin-top:2px;">Nagpur, India</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Contact -->
+    <div class="hidden md:flex items-center gap-4">
+      <a href="#contact" class="btn-gold px-5 py-2 text-sm font-bold">Contact Us</a>
+    </div>
+
+    <!-- MOBILE HAMBURGER -->
+    <button id="hamburger" class="md:hidden text-white focus:outline-none ml-auto">
+      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path id="ham-icon" stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- MOBILE MENU -->
+  <div id="mobile-menu" style="background:rgba(15,23,42,.97);">
+    <div class="px-6 pb-6 flex flex-col gap-4">
+      <a href="#about" class="text-white hover:text-yellow-400 transition-colors font-medium py-2 border-b border-white/10">Our Story</a>
+      <a href="#why" class="text-white hover:text-yellow-400 transition-colors font-medium py-2 border-b border-white/10">Why Choose Us</a>
+      <a href="#properties" class="text-white hover:text-yellow-400 transition-colors font-medium py-2 border-b border-white/10">Properties</a>
+      <a href="#contact" class="btn-gold px-5 py-2 text-sm font-bold text-center rounded-full">Contact Us</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO SECTION -->
+<section class="hero-bg flex flex-col justify-center items-center text-center relative px-6">
+  <div class="max-w-4xl mx-auto pt-32 pb-24" style="opacity:0;animation:fadeUp .9s ease .2s forwards;">
+    <div class="section-label mb-6">📍 Nagpur, India — Trusted Since Day One</div>
+    <h1 style="font-family:\'Playfair Display\',serif;font-size:clamp(2.5rem,6vw,5rem);font-weight:900;color:#fff;line-height:1.1;" class="mb-6">
+      Turning Nagpur\'s Land<br/>
+      <span style="color:var(--gold);">into Landmarks.</span><br/>
+      Dreams into Reality.
+    </h1>
+    <p class="text-lg text-white/80 max-w-2xl mx-auto mb-10" style="font-size:1.1rem;line-height:1.7;">
+      We help you invest in the right property with confidence, transparency, and long-term growth.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="#properties" class="btn-gold px-8 py-4 text-base font-bold inline-block">Explore Properties</a>
+      <a href="#contact" class="btn-outline px-8 py-4 text-base font-bold inline-block">Book Site Visit</a>
+    </div>
+  </div>
+
+  <!-- STATS BAR -->
+  <div class="w-full max-w-5xl mx-auto mb-12 px-4">
+    <div style="background:rgba(255,255,255,.08);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.15);border-radius:1.5rem;" class="grid grid-cols-2 md:grid-cols-4 gap-0">
+      <div class="text-center py-6 border-r border-white/10">
+        <div class="stat-num">13+</div>
+        <div class="text-white/70 text-sm mt-1">Years of Trust</div>
+      </div>
+      <div class="text-center py-6 border-r border-white/10 md:border-r">
+        <div class="stat-num">2000+</div>
+        <div class="text-white/70 text-sm mt-1">Happy Clients</div>
+      </div>
+      <div class="text-center py-6 border-r border-white/10">
+        <div class="stat-num">4</div>
+        <div class="text-white/70 text-sm mt-1">Premium Projects</div>
+      </div>
+      <div class="text-center py-6">
+        <div class="stat-num">100%</div>
+        <div class="text-white/70 text-sm mt-1">Transparent Deals</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCROLL INDICATOR -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+    <div class="scroll-dot"><span></span></div>
+    <span class="text-white/50 text-xs tracking-widest uppercase">Scroll</span>
+  </div>
+</section>
+
+<!-- ABOUT / WHY CHOOSE US -->
+<section id="about" class="py-24 px-6" style="background:var(--bg);">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid md:grid-cols-2 gap-16 items-center">
+      <div>
+        <div class="section-label mb-4">About Neel Infratech</div>
+        <h2 class="section-title text-4xl md:text-5xl mb-6" style="color:var(--navy);">
+          Building Trust,<br/>One Property<br/>at a Time
+        </h2>
+        <p class="text-gray-600 text-lg mb-6 leading-relaxed">
+          Neel Infratech is a trusted real estate developer in Nagpur with deep local expertise. We focus on transparency, customer trust, and high-growth investment opportunities in Nagpur\'s most promising zones.
+        </p>
+        <div class="mission-item mb-4">
+          <p class="font-semibold text-gray-800">Build strong partnerships with customers</p>
+        </div>
+        <div class="mission-item mb-4">
+          <p class="font-semibold text-gray-800">Deliver transparent and secure investments</p>
+        </div>
+        <div class="mission-item mb-4">
+          <p class="font-semibold text-gray-800">Educate customers about real estate decisions</p>
+        </div>
+        <div class="mission-item mb-6">
+          <p class="font-semibold text-gray-800">Create long-term growth opportunities</p>
+        </div>
+        <a href="#contact" class="btn-gold px-8 py-4 text-base font-bold inline-block">Get in Touch</a>
+      </div>
+      <div class="relative">
+        <div style="border-radius:2rem;overflow:hidden;height:480px;">
+          <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80" alt="About Neel Infratech" class="w-full h-full object-cover"/>
+        </div>
+        <div style="position:absolute;bottom:-1.5rem;left:-1.5rem;background:var(--gold);border-radius:1rem;padding:1.5rem 2rem;box-shadow:0 12px 32px rgba(234,179,8,.3);">
+          <div style="font-family:\'Playfair Display\',serif;font-size:2rem;font-weight:900;color:#000;">13+</div>
+          <div class="text-sm font-semibold text-black/70">Years of Excellence</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY CHOOSE US CARDS -->
+<section id="why" class="py-24 px-6" style="background:var(--navy);">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <div class="section-label mb-4">Why Choose Us</div>
+      <h2 class="section-title text-4xl md:text-5xl text-white">
+        The Neel Infratech<br/>Difference
+      </h2>
+    </div>
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="card-hover" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:1.5rem;padding:2rem;">
+        <div style="background:var(--gold);width:52px;height:52px;border-radius:.75rem;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
+          <svg width="24" height="24" fill="#000" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h3 class="text-white font-bold text-lg mb-2">Transparent Deals</h3>
+        <p class="text-white/60 text-sm leading-relaxed">No hidden charges. Every transaction is clear, documented, and fully explained to you.</p>
+      </div>
+      <div class="card-hover" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:1.5rem;padding:2rem;">
+        <div style="background:var(--gold);width:52px;height:52px;border-radius:.75rem;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
+          <svg width="24" height="24" fill="none" stroke="#000" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+        </div>
+        <h3 class="text-white font-bold text-lg mb-2">Nagpur Growth Zones</h3>
+        <p class="text-white/60 text-sm leading-relaxed">Expert knowledge of which areas in Nagpur will deliver the highest long-term returns.</p>
+      </div>
+      <div class="card-hover" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:1.5rem;padding:2rem;">
+        <div style="background:var(--gold);width:52px;height:52px;border-radius:.75rem;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
+          <svg width="24" height="24" fill="none" stroke="#000" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </div>
+        <h3 class="text-white font-bold text-lg mb-2">Strong Relationships</h3>
+        <p class="text-white/60 text-sm leading-relaxed">We build lasting connections with our clients, supporting them beyond just the sale.</p>
+      </div>
+      <div class="card-hover" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:1.5rem;padding:2rem;">
+        <div style="background:var(--gold);width:52px;height:52px;border-radius:.75rem;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
+          <svg width="24" height="24" fill="none" stroke="#000" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+        </div>
+        <h3 class="text-white font-bold text-lg mb-2">Long-term Value</h3>
+        <p class="text-white/60 text-sm leading-relaxed">Properties chosen for their proven track record of appreciation in Nagpur\'s market.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDER SECTION -->
+<section class="py-24 px-6" style="background:var(--bg);">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <div class="section-label mb-4">Visionary Leadership</div>
+      <h2 class="section-title text-4xl md:text-5xl" style="color:var(--navy);">Meet Our Founder</h2>
+    </div>
+    <div class="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
+      <div style="position:relative;">
+        <div style="background:linear-gradient(135deg,var(--navy),#1e3a5f);border-radius:2rem;overflow:hidden;height:500px;display:flex;align-items:flex-end;justify-content:center;">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80" alt="Mr. Pitambar Ikhar" style="width:100%;height:100%;object-fit:cover;object-position:top;"/>
+        </div>
+        <div style="position:absolute;top:1.5rem;right:-1rem;background:var(--gold);border-radius:1rem;padding:1rem 1.5rem;box-shadow:0 12px 32px rgba(234,179,8,.4);">
+          <div style="font-family:\'Playfair Display\',serif;font-size:1.5rem;font-weight:900;color:#000;line-height:1;">CMD</div>
+          <div class="text-xs font-bold text-black/70">& Founder</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:4rem;color:var(--gold);font-family:\'Playfair Display\',serif;line-height:1;margin-bottom:1rem;">"</div>
+        <h3 style="font-family:\'Playfair Display\',serif;font-size:2rem;font-weight:900;color:var(--navy);margin-bottom:.5rem;">Mr. Pitambar Ikhar</h3>
+        <p style="color:var(--gold);font-weight:600;margin-bottom:1.5rem;text-transform:uppercase;letter-spacing:.1em;font-size:.85rem;">Founder & CMD, Neel Infratech</p>
+        <p class="text-gray-600 text-lg leading-relaxed mb-6">
+          A visionary leader with deep expertise in real estate, focused on trust, transparency, and growth. He has built Neel Infratech into a reliable brand in Nagpur through integrity and strong market understanding.
+        </p>
+        <p class="text-gray-600 leading-relaxed mb-8">
+          Under his guidance, Neel Infratech has delivered landmark projects that have changed the skyline of Nagpur, empowering thousands of families to invest smartly and live better.
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <span style="background:rgba(234,179,8,.1);border:1px solid rgba(234,179,8,.3);color:#92710a;border-radius:50px;padding:.4rem 1rem;font-size:.8rem;font-weight:600;">Real Estate Guru</span>
+          <span style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#166534;border-radius:50px;padding:.4rem 1rem;font-size:.8rem;font-weight:600;">13+ Years</span>
+          <span style="background:rgba(15,23,42,.08);border:1px solid rgba(15,23,42,.15);color:var(--navy);border-radius:50px;padding:.4rem 1rem;font-size:.8rem;font-weight:600;">Nagpur Expert</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIRECTORS SECTION -->
+<section id="directors" class="py-24 px-6" style="background:#f1f5f9;">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <div class="section-label mb-4">Our Leadership</div>
+      <h2 class="section-title text-4xl md:text-5xl" style="color:var(--navy);">The Directors</h2>
+      <p class="text-gray-500 mt-4 max-w-xl mx-auto">Real stories of resilience, dedication, and success — the team behind Neel Infratech\'s growth.</p>
+    </div>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- Ajay Dandekar -->
+      <div class="dir-card card-hover" style="height:420px;">
+        <img src="/mnt/user-data/uploads/AjayDandekar.png" alt="Ajay Dandekar" onerror="this.src=\'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80\'"/>
+        <div class="dir-card-content">
+          <p style="color:var(--gold);font-style:italic;font-size:.85rem;margin-bottom:.75rem;line-height:1.4;">"Rasta chalna, saaf chalna – chahe usme darr lage."</p>
+          <h3 class="text-white font-bold text-xl mb-1">Ajay Dandekar</h3>
+          <p style="color:rgba(255,255,255,.6);font-size:.8rem;margin-bottom:.75rem;">Director • 400+ Businesses Built</p>
+          <p style="color:rgba(255,255,255,.75);font-size:.8rem;line-height:1.5;">From network marketing to real estate success — helped 400+ people build thriving businesses.</p>
+        </div>
+      </div>
+
+      <!-- Rupesh -->
+      <div class="dir-card card-hover" style="height:420px;">
+        <img src="/mnt/user-data/uploads/Rupesh.png" alt="Rupesh Sir" onerror="this.src=\'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80\'"/>
+        <div class="dir-card-content">
+          <p style="color:var(--gold);font-style:italic;font-size:.85rem;margin-bottom:.75rem;line-height:1.4;">"Aadmi zindagi mein utna hi bada ban sakta hai, jitni badi uski soch ho."</p>
+          <h3 class="text-white font-bold text-xl mb-1">Rupesh Sir</h3>
+          <p style="color:rgba(255,255,255,.6);font-size:.8rem;margin-bottom:.75rem;">Director • 11+ Years in Real Estate</p>
+          <p style="color:rgba(255,255,255,.75);font-size:.8rem;line-height:1.5;">From farming roots to major real estate milestones — a journey of unwavering dedication.</p>
+        </div>
+      </div>
+
+      <!-- Pushparaj -->
+      <div class="dir-card card-hover" style="height:420px;">
+        <img src="/mnt/user-data/uploads/Pushparaj.png" alt="Pushparaj Meshram" onerror="this.src=\'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80\'"/>
+        <div class="dir-card-content">
+          <p style="color:var(--gold);font-style:italic;font-size:.85rem;margin-bottom:.75rem;line-height:1.4;">"Hume zarurat ke hisaab se nahi, chahat ke hisaab se jeena chahiye."</p>
+          <h3 class="text-white font-bold text-xl mb-1">Pushparaj Meshram</h3>
+          <p style="color:rgba(255,255,255,.6);font-size:.8rem;margin-bottom:.75rem;">Director • 2000+ Clients • 18+ Years</p>
+          <p style="color:rgba(255,255,255,.75);font-size:.8rem;line-height:1.5;">Law background, 18+ years of experience, 2000+ clients served with excellence.</p>
+        </div>
+      </div>
+
+      <!-- Satendra -->
+      <div class="dir-card card-hover" style="height:420px;">
+        <img src="/mnt/user-data/uploads/SatendraChaudhary.png" alt="Satendra Chaudhari" onerror="this.src=\'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80\'"/>
+        <div class="dir-card-content">
+          <p style="color:var(--gold);font-style:italic;font-size:.85rem;margin-bottom:.75rem;line-height:1.4;">"Karam pe vishvash rakho, result pe nahi."</p>
+          <h3 class="text-white font-bold text-xl mb-1">Satendra Chaudhari</h3>
+          <p style="color:rgba(255,255,255,.6);font-size:.8rem;margin-bottom:.75rem;">Director • 700+ Satisfied Clients</p>
+          <p style="color:rgba(255,255,255,.75);font-size:.8rem;line-height:1.5;">Built his career from scratch, supporting his family and community through real estate success.</p>
+        </div>
+      </div>
+
+      <!-- Dekate -->
+      <div class="dir-card card-hover" style="height:420px;">
+        <img src="/mnt/user-data/uploads/Dekate.png" alt="Prashant Dekate" onerror="this.src=\'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80\'"/>
+        <div class="dir-card-content">
+          <p style="color:var(--gold);font-style:italic;font-size:.85rem;margin-bottom:.75rem;line-height:1.4;">"Jab tak thakte nahi, tab tak haarte nahi."</p>
+          <h3 class="text-white font-bold text-xl mb-1">Prashant Dekate</h3>
+          <p style="color:rgba(255,255,255,.6);font-size:.8rem;margin-bottom:.75rem;">Director • Former Lecturer</p>
+          <p style="color:rgba(255,255,255,.75);font-size:.8rem;line-height:1.5;">Former lecturer who overcame financial setbacks and rebuilt life through real estate mastery.</p>
+        </div>
+      </div>
+
+      <!-- Team CTA Card -->
+      <div class="card-hover flex flex-col justify-center items-center text-center" style="background:linear-gradient(135deg,var(--navy),#1e3a5f);border-radius:1.5rem;padding:2.5rem;min-height:420px;">
+        <div style="font-family:\'Playfair Display\',serif;font-size:3rem;font-weight:900;color:var(--gold);margin-bottom:1rem;">5</div>
+        <h3 class="text-white text-xl font-bold mb-3">Visionary Directors</h3>
+        <p class="text-white/60 text-sm leading-relaxed mb-6">Each with a unique journey, united by a commitment to Nagpur\'s real estate growth.</p>
+        <a href="#contact" class="btn-gold px-6 py-3 text-sm font-bold inline-block">Meet the Team</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROPERTIES SECTION -->
+<section id="properties" class="py-24 px-6" style="background:var(--bg);">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <div class="section-label mb-4">Our Projects</div>
+      <h2 class="section-title text-4xl md:text-5xl" style="color:var(--navy);">Premium Properties<br/>in Nagpur</h2>
+    </div>
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+      <!-- Vrindavan Park -->
+      <div class="prop-card card-hover">
+        <div style="overflow:hidden;height:220px;position:relative;">
+          <img src="/mnt/user-data/uploads/propertiesBanner.png" alt="Vrindavan Park" style="width:100%;height:100%;object-fit:cover;" onerror="this.src=\'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&q=80\'"/>
+          <div style="position:absolute;top:1rem;left:1rem;background:var(--gold);border-radius:50px;padding:.3rem .8rem;font-size:.7rem;font-weight:700;color:#000;">RESIDENTIAL</div>
+        </div>
+        <div style="padding:1.5rem;">
+          <h3 class="font-bold text-lg mb-1" style="color:var(--navy);">Vrindavan Park</h3>
+          <p class="text-gray-500 text-sm mb-3">📍 Nagpur, Maharashtra</p>
+          <p class="text-gray-600 text-sm leading-relaxed mb-4">Premium residential plots in a serene, well-planned layout with modern amenities.</p>
+          <a href="#contact" class="btn-gold px-5 py-2.5 text-sm font-bold inline-block w-full text-center">Enquire Now</a>
+        </div>
+      </div>
+
+      <!-- Silver Star -->
+      <div class="prop-card card-hover">
+        <div style="overflow:hidden;height:220px;position:relative;">
+          <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&q=80" alt="Silver Star" style="width:100%;height:100%;object-fit:cover;"/>
+          <div style="position:absolute;top:1rem;left:1rem;background:#22C55E;border-radius:50px;padding:.3rem .8rem;font-size:.7rem;font-weight:700;color:#fff;">VILLA</div>
+        </div>
+        <div style="padding:1.5rem;">
+          <h3 class="font-bold text-lg mb-1" style="color:var(--navy);">Silver Star</h3>
+          <p class="text-gray-500 text-sm mb-3">📍 Nagpur, Maharashtra</p>
+          <p class="text-gray-600 text-sm leading-relaxed mb-4">Luxury villas with contemporary design and premium finishes for modern living.</p>
+          <a href="#contact" class="btn-gold px-5 py-2.5 text-sm font-bold inline-block w-full text-center">Enquire Now</a>
+        </div>
+      </div>
+
+      <!-- Silver Icon -->
+      <div class="prop-card card-hover">
+        <div style="overflow:hidden;height:220px;position:relative;">
+          <img src="https://images.unsplash.com/photo-1591474200742-8e512e6f98f8?w=600&q=80" alt="Silver Icon" style="width:100%;height:100%;object-fit:cover;"/>
+          <div style="position:absolute;top:1rem;left:1rem;background:var(--navy);border-radius:50px;padding:.3rem .8rem;font-size:.7rem;font-weight:700;color:#fff;">FARMHOUSE</div>
+        </div>
+        <div style="padding:1.5rem;">
+          <h3 class="font-bold text-lg mb-1" style="color:var(--navy);">Silver Icon</h3>
+          <p class="text-gray-500 text-sm mb-3">📍 Nagpur, Maharashtra</p>
+          <p class="text-gray-600 text-sm leading-relaxed mb-4">Tranquil farmhouse plots blending nature and investment in Nagpur\'s outskirts.</p>
+          <a href="#contact" class="btn-gold px-5 py-2.5 text-sm font-bold inline-block w-full text-center">Enquire Now</a>
+        </div>
+      </div>
+
+      <!-- Rajatbhoomi -->
+      <div class="prop-card card-hover">
+        <div style="overflow:hidden;height:220px;position:relative;">
+          <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&q=80" alt="Rajatbhoomi" style="width:100%;height:100%;object-fit:cover;"/>
+          <div style="position:absolute;top:1rem;left:1rem;background:#f59e0b;border-radius:50px;padding:.3rem .8rem;font-size:.7rem;font-weight:700;color:#000;">COMMERCIAL</div>
+        </div>
+        <div style="padding:1.5rem;">
+          <h3 class="font-bold text-lg mb-1" style="color:var(--navy);">Rajatbhoomi</h3>
+          <p class="text-gray-500 text-sm mb-3">📍 Nagpur, Maharashtra</p>
+          <p class="text-gray-600 text-sm leading-relaxed mb-4">Strategic commercial land in Nagpur\'s high-growth corridors for business investment.</p>
+          <a href="#contact" class="btn-gold px-5 py-2.5 text-sm font-bold inline-block w-full text-center">Enquire Now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY SECTION -->
+<section id="gallery" class="py-24 px-6" style="background:var(--navy);">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <div class="section-label mb-4">Our Moments</div>
+      <h2 class="section-title text-4xl md:text-5xl text-white">Gallery</h2>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" style="grid-auto-rows:200px;">
+      <div class="gallery-img col-span-2 row-span-2">
+        <img src="/mnt/user-data/uploads/img26.jpg" alt="Neel Infratech Event" onerror="this.src=\'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=800&q=80\'" style="border-radius:1rem;"/>
+      </div>
+      <div class="gallery-img">
+        <img src="/mnt/user-data/uploads/img18.jpg" alt="Team" onerror="this.src=\'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&q=80\'" style="border-radius:1rem;"/>
+      </div>
+      <div class="gallery-img">
+        <img src="/mnt/user-data/uploads/img18__1_.jpg" alt="Site Visit" onerror="this.src=\'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&q=80\'" style="border-radius:1rem;"/>
+      </div>
+      <div class="gallery-img">
+        <img src="/mnt/user-data/uploads/img29.jpg" alt="Anniversary" onerror="this.src=\'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=80\'" style="border-radius:1rem;"/>
+      </div>
+      <div class="gallery-img">
+        <img src="https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=400&q=80" alt="Property" style="border-radius:1rem;"/>
+      </div>
+      <div class="gallery-img col-span-2">
+        <img src="https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?w=800&q=80" alt="Neel Infratech" style="border-radius:1rem;"/>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" class="py-24 px-6" style="background:var(--bg);">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <div class="section-label mb-4">Client Stories</div>
+      <h2 class="section-title text-4xl md:text-5xl" style="color:var(--navy);">What Our Clients Say</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="testi-card card-hover">
+        <div class="stars text-xl mb-4">★★★★★</div>
+        <p class="text-gray-600 leading-relaxed mb-6 italic">"Neel Infratech made the entire process incredibly smooth. From site visits to paperwork — completely transparent. Best investment decision of my life."</p>
+        <div class="flex items-center gap-3">
+          <div style="width:44px;height:44px;background:linear-gradient(135deg,var(--navy),#1e3a5f);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">RK</div>
+          <div>
+            <div class="font-bold text-sm" style="color:var(--navy);">Rajesh Kumar</div>
+            <div class="text-xs text-gray-500">Residential Plot Buyer</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card card-hover" style="border-top:3px solid var(--gold);">
+        <div class="stars text-xl mb-4">★★★★★</div>
+        <p class="text-gray-600 leading-relaxed mb-6 italic">"The team\'s knowledge about Nagpur\'s growth zones is unmatched. My property value has already appreciated significantly. Truly a trustworthy company."</p>
+        <div class="flex items-center gap-3">
+          <div style="width:44px;height:44px;background:linear-gradient(135deg,var(--gold),#ca9a06);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;">PS</div>
+          <div>
+            <div class="font-bold text-sm" style="color:var(--navy);">Priya Sharma</div>
+            <div class="text-xs text-gray-500">Villa Project Investor</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card card-hover">
+        <div class="stars text-xl mb-4">★★★★★</div>
+        <p class="text-gray-600 leading-relaxed mb-6 italic">"I was new to real estate investment. Neel Infratech educated me at every step, never pushed me, and helped me make the right decision. Exceptional service."</p>
+        <div class="flex items-center gap-3">
+          <div style="width:44px;height:44px;background:linear-gradient(135deg,#22C55E,#16a34a);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">AM</div>
+          <div>
+            <div class="font-bold text-sm" style="color:var(--navy);">Amit Meshram</div>
+            <div class="text-xs text-gray-500">Commercial Land Buyer</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ajay Dandekar Testimonial -->
+    <div class="mt-8" style="background:linear-gradient(135deg,var(--navy),#1e3a5f);border-radius:1.5rem;padding:2.5rem;">
+      <div style="font-size:3rem;color:var(--gold);font-family:\'Playfair Display\',serif;line-height:1;margin-bottom:1rem;">"</div>
+      <p class="text-white text-xl font-medium leading-relaxed mb-4 italic">"Neel Infratech guided us clearly and helped us invest wisely. The transparency and professionalism is unmatched in Nagpur."</p>
+      <div class="flex items-center gap-4">
+        <div style="width:52px;height:52px;border-radius:50%;overflow:hidden;border:3px solid var(--gold);">
+          <img src="/mnt/user-data/uploads/AjayDandekar.png" alt="Ajay Dandekar" style="width:100%;height:100%;object-fit:cover;" onerror="this.src=\'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80\'"/>
+        </div>
+        <div>
+          <div class="text-white font-bold">Ajay Dandekar</div>
+          <div style="color:var(--gold);font-size:.85rem;">Director, Neel Infratech</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="py-24 px-6" style="background:linear-gradient(135deg,var(--gold),#ca9a06);">
+  <div class="max-w-4xl mx-auto text-center">
+    <h2 style="font-family:\'Playfair Display\',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:#000;margin-bottom:1.5rem;line-height:1.2;">
+      Your Dream Property is<br/>Just One Step Away
+    </h2>
+    <p class="text-black/70 text-lg mb-10 max-w-xl mx-auto">
+      Join 2000+ families who trusted Neel Infratech to guide their investment journey in Nagpur.
+    </p>
+    <a href="#contact" style="background:#000;color:#fff;padding:1.25rem 3rem;border-radius:50px;font-weight:700;font-size:1.1rem;display:inline-block;transition:all .3s;" onmouseover="this.style.background=\'var(--navy)\'" onmouseout="this.style.background=\'#000\'">
+      Book Free Site Visit
+    </a>
+  </div>
+</section>
+
+<!-- CONTACT SECTION -->
+<section id="contact" class="py-24 px-6" style="background:var(--navy);">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid md:grid-cols-2 gap-16">
+      <div>
+        <div class="section-label mb-4">Get in Touch</div>
+        <h2 class="section-title text-4xl md:text-5xl text-white mb-6">Let\'s Find Your<br/>Perfect Property</h2>
+        <p class="text-white/60 text-lg mb-10 leading-relaxed">
+          Fill out the form and our expert team will get back to you within 24 hours with the best options tailored to your needs.
+        </p>
+        <div class="flex items-center gap-4 mb-6">
+          <div style="width:48px;height:48px;background:rgba(234,179,8,.15);border:1px solid rgba(234,179,8,.3);border-radius:.75rem;display:flex;align-items:center;justify-content:center;">
+            <svg width="20" height="20" fill="#EAB308" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+          </div>
+          <div>
+            <div class="text-white/50 text-xs uppercase tracking-wider mb-1">Phone</div>
+            <a href="tel:+919226537230" class="text-white font-semibold text-lg hover:text-yellow-400 transition-colors">+91 9226537230</a>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 mb-10">
+          <div style="width:48px;height:48px;background:rgba(37,211,102,.15);border:1px solid rgba(37,211,102,.3);border-radius:.75rem;display:flex;align-items:center;justify-content:center;">
+            <svg width="20" height="20" fill="#25D366" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </div>
+          <div>
+            <div class="text-white/50 text-xs uppercase tracking-wider mb-1">WhatsApp</div>
+            <a href="https://wa.me/919226537230" target="_blank" class="text-white font-semibold text-lg hover:text-green-400 transition-colors">Chat on WhatsApp</a>
+          </div>
+        </div>
+
+        <!-- Trust badges -->
+        <div class="grid grid-cols-3 gap-4">
+          <div class="text-center" style="background:rgba(255,255,255,.05);border-radius:1rem;padding:1.25rem .75rem;">
+            <div style="font-family:\'Playfair Display\',serif;font-size:1.5rem;font-weight:900;color:var(--gold);">2000+</div>
+            <div class="text-white/50 text-xs mt-1">Happy Clients</div>
+          </div>
+          <div class="text-center" style="background:rgba(255,255,255,.05);border-radius:1rem;padding:1.25rem .75rem;">
+            <div style="font-family:\'Playfair Display\',serif;font-size:1.5rem;font-weight:900;color:var(--gold);">4</div>
+            <div class="text-white/50 text-xs mt-1">Projects</div>
+          </div>
+          <div class="text-center" style="background:rgba(255,255,255,.05);border-radius:1rem;padding:1.25rem .75rem;">
+            <div style="font-family:\'Playfair Display\',serif;font-size:1.5rem;font-weight:900;color:var(--gold);">13+</div>
+            <div class="text-white/50 text-xs mt-1">Years</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORM -->
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:2rem;padding:2.5rem;">
+        <h3 class="text-white font-bold text-2xl mb-8">Send an Enquiry</h3>
+        <div style="display:flex;flex-direction:column;gap:1.25rem;">
+          <div>
+            <label class="text-white/60 text-sm mb-2 block">Full Name *</label>
+            <input type="text" placeholder="Your full name" style="width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:.75rem;padding:.875rem 1.25rem;color:#fff;font-size:.95rem;" class="placeholder-white/30"/>
+          </div>
+          <div>
+            <label class="text-white/60 text-sm mb-2 block">Phone Number *</label>
+            <input type="tel" placeholder="+91 your number" style="width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:.75rem;padding:.875rem 1.25rem;color:#fff;font-size:.95rem;" class="placeholder-white/30"/>
+          </div>
+          <div>
+            <label class="text-white/60 text-sm mb-2 block">Interested In</label>
+            <select style="width:100%;background:rgba(30,42,70,.9);border:1px solid rgba(255,255,255,.15);border-radius:.75rem;padding:.875rem 1.25rem;color:#fff;font-size:.95rem;">
+              <option value="">Select a project</option>
+              <option>Vrindavan Park – Residential Plots</option>
+              <option>Silver Star – Villas</option>
+              <option>Silver Icon – Farmhouse Plots</option>
+              <option>Rajatbhoomi – Commercial Land</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-white/60 text-sm mb-2 block">Message</label>
+            <textarea placeholder="Tell us about your requirements..." rows="4" style="width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:.75rem;padding:.875rem 1.25rem;color:#fff;font-size:.95rem;resize:none;" class="placeholder-white/30"></textarea>
+          </div>
+          <button onclick="alert(\'Thank you! Our team will contact you within 24 hours.\')" class="btn-gold py-4 rounded-xl font-bold text-lg w-full mt-2">
+            Submit Enquiry
+          </button>
+          <a href="https://wa.me/919226537230?text=Hi%20Neel%20Infratech%2C%20I%20am%20interested%20in%20your%20properties." target="_blank" style="background:#25D366;color:#fff;padding:1rem;border-radius:.75rem;font-weight:700;text-align:center;display:block;transition:all .3s;" onmouseover="this.style.background=\'#1ea952\'" onmouseout="this.style.background=\'#25D366\'">
+            💬 Chat on WhatsApp Instead
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="background:#060d1a;color:#fff;padding:4rem 1.5rem 2rem;">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid md:grid-cols-4 gap-12 mb-12">
+      <div class="md:col-span-2">
+        <div style="font-family:\'Playfair Display\',serif;font-size:2.5rem;font-weight:900;line-height:1;margin-bottom:.5rem;">
+          NEEL <span style="color:var(--gold);">INFRATECH</span>
+        </div>
+        <p style="color:var(--gold);font-style:italic;margin-bottom:1.5rem;font-size:.9rem;">Time Bound Delivery with Development</p>
+        <p style="color:rgba(255,255,255,.5);font-size:.9rem;line-height:1.7;max-width:320px;">
+          Nagpur\'s most trusted real estate developer. Building dreams, creating landmarks, delivering value.
+        </p>
+      </div>
+      <div>
+        <h4 class="font-bold text-sm uppercase tracking-wider mb-5" style="color:var(--gold);">Our Projects</h4>
+        <ul style="color:rgba(255,255,255,.5);font-size:.9rem;line-height:2;">
+          <li><a href="#" class="hover:text-white transition-colors">Vrindavan Park</a></li>
+          <li><a href="#" class="hover:text-white transition-colors">Silver Star</a></li>
+          <li><a href="#" class="hover:text-white transition-colors">Silver Icon</a></li>
+          <li><a href="#" class="hover:text-white transition-colors">Rajatbhoomi</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold text-sm uppercase tracking-wider mb-5" style="color:var(--gold);">Connect With Us</h4>
+        <div style="color:rgba(255,255,255,.5);font-size:.9rem;line-height:2;">
+          <p><a href="tel:+919226537230" class="hover:text-white transition-colors">+91 9226537230</a></p>
+          <p style="margin-top:.5rem;">Nagpur, Maharashtra, India</p>
+        </div>
+        <div class="flex gap-4 mt-6">
+          <a href="#" style="width:36px;height:36px;background:rgba(255,255,255,.08);border-radius:.5rem;display:flex;align-items:center;justify-content:center;" class="hover:bg-yellow-500 transition-all" aria-label="Facebook">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+          <a href="#" style="width:36px;height:36px;background:rgba(255,255,255,.08);border-radius:.5rem;display:flex;align-items:center;justify-content:center;" class="hover:bg-yellow-500 transition-all" aria-label="Instagram">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <a href="https://wa.me/919226537230" style="width:36px;height:36px;background:rgba(255,255,255,.08);border-radius:.5rem;display:flex;align-items:center;justify-content:center;" class="hover:bg-green-500 transition-all" aria-label="WhatsApp">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div style="border-top:1px solid rgba(255,255,255,.08);padding-top:2rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+      <p style="color:rgba(255,255,255,.3);font-size:.85rem;">© 2025 Neel Infratech. All rights reserved. | Nagpur, Maharashtra</p>
+      <p style="color:rgba(255,255,255,.3);font-size:.85rem;">Real Estate | Plots | Villas | Farmhouses | Commercial</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // NAVBAR SCROLL
+  const navbar = document.getElementById("navbar");
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 60) {
+      navbar.classList.remove("top");
+      navbar.classList.add("scrolled");
+    } else {
+      navbar.classList.remove("scrolled");
+      navbar.classList.add("top");
+    }
+  });
+
+  // MOBILE MENU
+  const hamburger = document.getElementById("hamburger");
+  const mobileMenu = document.getElementById("mobile-menu");
+  hamburger.addEventListener("click", () => {
+    mobileMenu.classList.toggle("open");
+  });
+
+  // Close mobile menu on link click
+  mobileMenu.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", () => mobileMenu.classList.remove("open"));
+  });
+
+  // SCROLL ANIMATIONS (Intersection Observer)
+  const observerOpts = { threshold: 0.15 };
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = "1";
+        entry.target.style.transform = "translateY(0)";
+      }
+    });
+  }, observerOpts);
+
+  document.querySelectorAll(".card-hover, .prop-card, .testi-card, .dir-card").forEach(el => {
+    el.style.opacity = "0";
+    el.style.transform = "translateY(30px)";
+    el.style.transition = "opacity .7s ease, transform .7s ease, box-shadow .3s ease";
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
