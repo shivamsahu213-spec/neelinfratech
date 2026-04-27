@@ -740,32 +740,98 @@
 </section>
 
 <!-- ============ LEADERSHIP ============ -->
-<section id="about" class="py-20 md:py-28" style="background:var(--navy-mid);">
-  <div class="max-w-7xl mx-auto px-5">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+<section id="about" class="py-24 md:py-36" style="background:var(--navy-mid);position:relative;overflow:hidden;">
+  <!-- Subtle background texture -->
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 70% 50%,rgba(201,168,76,0.05),transparent);pointer-events:none;"></div>
+  <div class="max-w-7xl mx-auto px-5 relative z-10">
+
+    <!-- Section label -->
+    <div class="flex items-center gap-3 mb-14 fade-up">
+      <div class="gold-line"></div>
+      <span class="section-label">Visionary Leadership</span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-14 lg:gap-20 items-center">
+
+      <!-- LEFT: Image block -->
       <div class="relative fade-up">
-        <div class="relative rounded-2xl overflow-hidden" style="height:420px;">
-          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800" alt="Leadership" class="w-full h-full object-cover object-top"/>
-          <div class="absolute inset-0" style="background:linear-gradient(0deg,rgba(10,15,30,0.6),transparent 60%);"></div>
+        <!-- Main image -->
+        <div class="relative rounded-xl overflow-hidden shadow-2xl" style="height:480px;">
+          <img
+            src="/images/director-image.png"
+            alt="Mr. Pitambar Ikhar – Founder & CEO, Neel Infratech"
+            class="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-700"
+            style="transition:transform 0.7s ease;"
+          />
+          <!-- Subtle gradient at bottom -->
+          <div class="absolute inset-0" style="background:linear-gradient(0deg,rgba(10,15,30,0.55) 0%,transparent 55%);"></div>
+          <!-- Name tag on image -->
+          <div class="absolute bottom-0 left-0 right-0 px-6 py-5">
+            <div class="text-white font-semibold text-lg serif">Mr. Pitambar Ikhar</div>
+            <div class="text-amber-400/80 text-xs tracking-widest uppercase mt-0.5">Founder & CEO</div>
+          </div>
         </div>
-        <!-- Gold frame accent -->
-        <div class="absolute -bottom-3 -right-3 w-32 h-32 rounded-br-2xl" style="border-right:2px solid var(--gold);border-bottom:2px solid var(--gold);"></div>
-        <div class="absolute -top-3 -left-3 w-20 h-20 rounded-tl-2xl" style="border-left:2px solid rgba(201,168,76,0.4);border-top:2px solid rgba(201,168,76,0.4);"></div>
+
+        <!-- Gold frame corners -->
+        <div class="absolute -bottom-4 -right-4 w-36 h-36 rounded-br-2xl pointer-events-none" style="border-right:2px solid var(--gold);border-bottom:2px solid var(--gold);"></div>
+        <div class="absolute -top-4 -left-4 w-24 h-24 rounded-tl-2xl pointer-events-none" style="border-left:2px solid rgba(201,168,76,0.35);border-top:2px solid rgba(201,168,76,0.35);"></div>
+
+        <!-- Years badge -->
+        <div class="absolute top-6 -right-4 glass-card px-4 py-3 text-center shadow-xl hidden md:block">
+          <div class="serif text-3xl font-bold gold leading-none">13+</div>
+          <div class="text-white/50 text-xs mt-1 tracking-wide">Years of<br/>Excellence</div>
+        </div>
       </div>
 
+      <!-- RIGHT: Content block -->
       <div class="fade-up fade-up-delay-2">
-        <span class="section-label">Our Founder</span>
-        <div class="gold-line mt-3 mb-5"></div>
-        <blockquote class="serif text-3xl md:text-4xl font-bold text-white leading-tight mb-6">
-          <span class="gold text-5xl serif leading-none">"</span><br/>
-          We don't sell land,<br/>we <em class="gold-gradient not-italic">build futures</em>.
-        </blockquote>
-        <p class="text-white/55 text-sm leading-relaxed mb-6">With over a decade of experience in Nagpur's real estate landscape, our founder built Neel Infratech on the belief that every family deserves a plot they're proud of — at a price that's fair, in a location that grows.</p>
+        <span class="section-label">Founder & CEO · Neel Infratech</span>
+        <div class="gold-line mt-3 mb-7"></div>
+
+        <h2 class="serif text-4xl md:text-5xl font-bold text-white mb-2 leading-tight">
+          Mr. Pitambar <span class="gold-gradient">Ikhar</span>
+        </h2>
+        <p class="text-white/40 text-sm tracking-widest uppercase mb-8">Founder & Chief Executive Officer</p>
+
+        <p class="text-white/65 text-sm md:text-base leading-relaxed mb-6">
+          Mr. Pitambar Ikhar is a visionary leader driving Neel Infratech with a mission to transform land into long-term value. With deep expertise in real estate and a commitment to transparency, he has built trust among hundreds of investors across Nagpur's fastest-growing corridors.
+        </p>
+        <p class="text-white/50 text-sm leading-relaxed mb-10">
+          His belief that every family deserves access to quality land — at fair pricing, with complete documentation — has shaped every project Neel Infratech has delivered since its founding.
+        </p>
+
+        <!-- Quote -->
+        <div class="relative pl-6 mb-10" style="border-left:3px solid var(--gold);">
+          <span class="serif text-4xl gold leading-none absolute -top-2 -left-1">"</span>
+          <p class="serif text-xl md:text-2xl text-white font-semibold italic leading-snug mt-3">
+            We don't just sell land —<br/>we <span class="gold-gradient not-italic">build futures.</span>
+          </p>
+        </div>
+
+        <!-- Divider + signature line -->
         <div class="flex items-center gap-4">
-          <div class="w-12 h-0.5" style="background:linear-gradient(90deg,var(--gold),transparent);"></div>
+          <div class="w-14 h-px" style="background:linear-gradient(90deg,var(--gold),transparent);"></div>
           <div>
-            <div class="font-semibold text-white text-sm">Mr. Neel Sharma</div>
-            <div class="text-white/40 text-xs">Founder & Managing Director</div>
+            <div class="font-bold text-white text-base tracking-wide" style="font-family:'Cormorant Garamond',serif;">Mr. Pitambar Ikhar</div>
+            <div class="text-white/35 text-xs mt-0.5 tracking-widest uppercase">Founder & CEO · Neel Infratech</div>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="flex gap-6 mt-10 pt-8" style="border-top:1px solid rgba(201,168,76,0.12);">
+          <div>
+            <div class="serif text-3xl font-bold gold">2000+</div>
+            <div class="text-white/40 text-xs mt-1">Happy Clients</div>
+          </div>
+          <div style="width:1px;background:rgba(201,168,76,0.15);"></div>
+          <div>
+            <div class="serif text-3xl font-bold gold">3</div>
+            <div class="text-white/40 text-xs mt-1">Landmark Projects</div>
+          </div>
+          <div style="width:1px;background:rgba(201,168,76,0.15);"></div>
+          <div>
+            <div class="serif text-3xl font-bold gold">100%</div>
+            <div class="text-white/40 text-xs mt-1">Transparent Deals</div>
           </div>
         </div>
       </div>
@@ -777,30 +843,158 @@
 <section class="py-20 md:py-28" style="background:var(--navy);">
   <div class="max-w-7xl mx-auto px-5">
     <div class="text-center mb-14 fade-up">
-      <span class="section-label">The Leadership</span>
+      <span class="section-label">The Leadership Team</span>
       <div class="gold-line-center mt-3 mb-5"></div>
       <h2 class="serif text-4xl md:text-5xl font-bold text-white">Our <span class="gold-gradient">Directors</span></h2>
+      <p class="text-white/45 text-sm mt-4 max-w-lg mx-auto leading-relaxed">A team of driven individuals united by a shared vision — to build Nagpur's most trusted real estate brand.</p>
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
-      <div class="director-card fade-up">
-        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=800" alt="Director" loading="lazy"/>
-        <div class="director-overlay">
-          <span class="section-label text-amber-400/70">Director</span>
-          <h3 class="serif text-2xl font-bold text-white mt-1">Rajesh Mehta</h3>
-          <p class="text-white/50 text-xs mt-1">Head of Projects & Development</p>
+
+    <!-- Directors grid: 2 on top, 3 on bottom / mobile: single column -->
+    <div class="flex flex-col gap-6">
+
+      <!-- Row 1: 2 cards centered -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 max-w-2xl mx-auto w-full">
+
+        <!-- Ajay Dandekar -->
+        <div class="director-new-card fade-up">
+          <div class="director-img-wrap">
+            <img
+              src="/images/AjayDandekar.png"
+              alt="Ajay Dandekar"
+              class="director-img"
+              loading="lazy"
+            />
+            <div class="director-img-overlay"></div>
+          </div>
+          <div class="director-info">
+            <h3 class="serif text-xl font-bold text-white leading-tight">Ajay Dandekar</h3>
+            <p class="text-amber-400/80 text-xs tracking-widest uppercase mt-1">Director, Neel Infratech</p>
+            <p class="text-white/45 text-xs mt-2 leading-relaxed italic">"Building value through integrity and vision."</p>
+          </div>
         </div>
+
+        <!-- Prashant Dekate -->
+        <div class="director-new-card fade-up fade-up-delay-1">
+          <div class="director-img-wrap">
+            <img
+              src="/images/Dekate.png"
+              alt="Prashant Dekate"
+              class="director-img"
+              loading="lazy"
+            />
+            <div class="director-img-overlay"></div>
+          </div>
+          <div class="director-info">
+            <h3 class="serif text-xl font-bold text-white leading-tight">Prashant Dekate</h3>
+            <p class="text-amber-400/80 text-xs tracking-widest uppercase mt-1">Director, Neel Infratech</p>
+            <p class="text-white/45 text-xs mt-2 leading-relaxed italic">"Every plot tells a story of growth and trust."</p>
+          </div>
+        </div>
+
       </div>
-      <div class="director-card fade-up fade-up-delay-1">
-        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=800" alt="Director" loading="lazy"/>
-        <div class="director-overlay">
-          <span class="section-label text-amber-400/70">Director</span>
-          <h3 class="serif text-2xl font-bold text-white mt-1">Arjun Desai</h3>
-          <p class="text-white/50 text-xs mt-1">Head of Sales & Customer Relations</p>
+
+      <!-- Row 2: 3 cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- Pushparaj Meshram -->
+        <div class="director-new-card fade-up">
+          <div class="director-img-wrap">
+            <img
+              src="/images/Pushparaj.png"
+              alt="Pushparaj Meshram"
+              class="director-img"
+              loading="lazy"
+            />
+            <div class="director-img-overlay"></div>
+          </div>
+          <div class="director-info">
+            <h3 class="serif text-xl font-bold text-white leading-tight">Pushparaj Meshram</h3>
+            <p class="text-amber-400/80 text-xs tracking-widest uppercase mt-1">Director, Neel Infratech</p>
+            <p class="text-white/45 text-xs mt-2 leading-relaxed italic">"Delivering excellence one plot at a time."</p>
+          </div>
         </div>
+
+        <!-- Rupesh -->
+        <div class="director-new-card fade-up fade-up-delay-1">
+          <div class="director-img-wrap">
+            <img
+              src="/images/Rupesh.png"
+              alt="Rupesh"
+              class="director-img"
+              loading="lazy"
+            />
+            <div class="director-img-overlay"></div>
+          </div>
+          <div class="director-info">
+            <h3 class="serif text-xl font-bold text-white leading-tight">Rupesh</h3>
+            <p class="text-amber-400/80 text-xs tracking-widest uppercase mt-1">Director, Neel Infratech</p>
+            <p class="text-white/45 text-xs mt-2 leading-relaxed italic">"Land is legacy — we help you build yours."</p>
+          </div>
+        </div>
+
+        <!-- Satendra Chaudhary -->
+        <div class="director-new-card fade-up fade-up-delay-2">
+          <div class="director-img-wrap">
+            <img
+              src="/images/SatendraChaudhary.png"
+              alt="Satendra Chaudhary"
+              class="director-img"
+              loading="lazy"
+            />
+            <div class="director-img-overlay"></div>
+          </div>
+          <div class="director-info">
+            <h3 class="serif text-xl font-bold text-white leading-tight">Satendra Chaudhary</h3>
+            <p class="text-amber-400/80 text-xs tracking-widest uppercase mt-1">Director, Neel Infratech</p>
+            <p class="text-white/45 text-xs mt-2 leading-relaxed italic">"Smart investments begin with trusted guidance."</p>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 </section>
+
+<style>
+/* Director new card styles */
+.director-new-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(201,168,76,0.14);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.3s;
+  cursor: pointer;
+}
+.director-new-card:hover {
+  transform: scale(1.04) translateY(-4px);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 0 30px rgba(201,168,76,0.1);
+  border-color: rgba(201,168,76,0.35);
+}
+.director-img-wrap {
+  position: relative;
+  overflow: hidden;
+  height: 240px;
+}
+.director-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: top;
+  transition: transform 0.5s ease;
+  border-radius: 0;
+}
+.director-new-card:hover .director-img { transform: scale(1.07); }
+.director-img-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(0deg, rgba(10,15,30,0.6) 0%, transparent 55%);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.director-new-card:hover .director-img-overlay { opacity: 1; }
+.director-info {
+  padding: 18px 20px 20px;
+  border-top: 1px solid rgba(201,168,76,0.1);
+}
+</style>
 
 <!-- ============ GALLERY ============ -->
 <section class="py-20 md:py-28" style="background:var(--navy-mid);">
