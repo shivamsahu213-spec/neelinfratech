@@ -1,0 +1,915 @@
+
+<style>
+  :root {
+    --saffron: #D4631A;
+    --saffron-light: #F5E6D3;
+    --saffron-dark: #A04410;
+    --cream: #FDF8F1;
+    --cream-dark: #F5EDE0;
+    --gold: #C49A28;
+    --gold-light: #F7EFC7;
+    --maroon: #7A1C2E;
+    --maroon-light: #F5E8EB;
+    --text-main: var(--color-text-primary);
+    --text-muted: var(--color-text-secondary);
+    --border: var(--color-border-tertiary);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .tab-bar {
+    display: flex; gap: 4px; margin-bottom: 1.5rem; border-bottom: 0.5px solid var(--border); padding-bottom: 0;
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .tab-bar::-webkit-scrollbar { display: none; }
+
+  .tab {
+    padding: 8px 16px; font-size: 13px; font-weight: 500; cursor: pointer;
+    border: none; background: none; color: var(--text-muted); border-bottom: 2px solid transparent;
+    white-space: nowrap; transition: all 0.2s;
+  }
+  .tab.active { color: var(--saffron); border-bottom-color: var(--saffron); }
+  .tab:hover:not(.active) { color: var(--text-main); }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* Shared components */
+  .card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--border);
+    border-radius: var(--border-radius-lg);
+    padding: 1rem 1.25rem;
+  }
+
+  .metric-card {
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-md);
+    padding: 1rem; text-align: center;
+  }
+  .metric-label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+  .metric-value { font-size: 22px; font-weight: 500; }
+  .metric-value.saffron { color: var(--saffron); }
+  .metric-value.gold { color: var(--gold); }
+  .metric-value.maroon { color: var(--maroon); }
+
+  .status-badge {
+    display: inline-block; font-size: 11px; padding: 2px 8px;
+    border-radius: 20px; font-weight: 500;
+  }
+  .badge-placed { background: #EAF3DE; color: #3B6D11; }
+  .badge-pending { background: #FAEEDA; color: #854F0B; }
+  .badge-registered { background: #E6F1FB; color: #185FA5; }
+
+  .saffron-btn {
+    background: var(--saffron); color: #fff; border: none;
+    padding: 8px 16px; border-radius: var(--border-radius-md);
+    font-size: 13px; font-weight: 500; cursor: pointer;
+  }
+  .outline-btn {
+    background: none; border: 0.5px solid var(--border);
+    padding: 7px 14px; border-radius: var(--border-radius-md);
+    font-size: 13px; cursor: pointer; color: var(--text-main);
+  }
+
+  /* TOP BAR */
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--color-background-primary);
+    border-bottom: 0.5px solid var(--border);
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+    margin-bottom: 1rem;
+  }
+  .topbar-brand {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--saffron-light); color: var(--saffron-dark);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 500;
+  }
+  .topbar-actions { display: flex; align-items: center; gap: 12px; }
+
+  /* DEVOTEE DASHBOARD */
+  .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1rem; }
+
+  table.shiv-table { width: 100%; font-size: 13px; border-collapse: collapse; }
+  table.shiv-table th {
+    text-align: left; font-weight: 500; color: var(--text-muted);
+    font-size: 12px; padding: 8px 10px;
+    border-bottom: 0.5px solid var(--border);
+  }
+  table.shiv-table td {
+    padding: 9px 10px; border-bottom: 0.5px solid var(--border);
+    vertical-align: middle;
+  }
+  table.shiv-table tr:last-child td { border-bottom: none; }
+
+  .photo-thumb {
+    width: 48px; height: 48px; border-radius: 6px; object-fit: cover;
+    background: var(--saffron-light);
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+    font-size: 18px;
+  }
+
+  .notif-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 0; border-bottom: 0.5px solid var(--border);
+  }
+  .notif-item:last-child { border-bottom: none; }
+  .notif-icon { font-size: 18px; margin-top: 2px; color: var(--saffron); }
+  .notif-time { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  /* HOMEPAGE */
+  .hero-section {
+    background: linear-gradient(135deg, #3D1A06 0%, #7A3B10 60%, #B05A1A 100%);
+    border-radius: var(--border-radius-lg);
+    padding: 2rem 1.5rem; text-align: center; position: relative; overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  .hero-section::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 70% 30%, rgba(212,99,26,0.3) 0%, transparent 60%);
+  }
+  .hero-devanagari { font-size: 22px; color: #F5C97A; font-weight: 500; margin-bottom: 4px; position: relative; }
+  .hero-english { font-size: 13px; color: rgba(255,255,255,0.75); margin-bottom: 1rem; position: relative; }
+  .hero-counter {
+    display: inline-block; background: rgba(255,255,255,0.15);
+    border: 0.5px solid rgba(255,255,255,0.3); padding: 6px 16px;
+    border-radius: 20px; color: #fff; font-size: 13px; margin-bottom: 1rem; position: relative;
+  }
+  .hero-counter span { font-weight: 500; color: #F5C97A; }
+  .hero-cta {
+    background: var(--saffron); color: #fff; border: none;
+    padding: 12px 28px; border-radius: var(--border-radius-md);
+    font-size: 14px; font-weight: 500; cursor: pointer; position: relative;
+  }
+
+  .mission-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 1rem; }
+  .mission-card {
+    background: var(--color-background-primary); border: 0.5px solid var(--border);
+    border-radius: var(--border-radius-lg); padding: 1rem; text-align: center;
+  }
+  .mission-icon { font-size: 24px; color: var(--saffron); margin-bottom: 8px; }
+  .mission-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+  .mission-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+  .stats-bar {
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 1rem;
+  }
+  .stat-item {
+    background: var(--saffron-light); border-radius: var(--border-radius-md);
+    padding: 12px; text-align: center;
+  }
+  .stat-num { font-size: 20px; font-weight: 500; color: var(--saffron-dark); }
+  .stat-label { font-size: 11px; color: var(--saffron-dark); opacity: 0.8; }
+
+  .testimonial-card {
+    background: var(--color-background-primary); border: 0.5px solid var(--border);
+    border-radius: var(--border-radius-lg); padding: 1.25rem;
+  }
+  .testi-quote { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px; font-style: italic; }
+  .testi-author { display: flex; align-items: center; gap: 10px; }
+  .testi-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--saffron); cursor: pointer; }
+  .testi-dot.inactive { background: var(--border); }
+
+  /* REGISTRATION */
+  .steps-bar { display: flex; align-items: center; gap: 0; margin-bottom: 1.5rem; }
+  .step-item { display: flex; align-items: center; flex: 1; }
+  .step-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 500; flex-shrink: 0;
+  }
+  .step-num.done { background: var(--saffron); color: #fff; }
+  .step-num.active { background: var(--saffron-light); color: var(--saffron); border: 1.5px solid var(--saffron); }
+  .step-num.todo { background: var(--color-background-secondary); color: var(--text-muted); }
+  .step-line { flex: 1; height: 1px; background: var(--border); margin: 0 4px; }
+  .step-line.done { background: var(--saffron); }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .form-group { display: flex; flex-direction: column; gap: 4px; }
+  .form-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+  .form-input {
+    padding: 8px 10px; font-size: 13px; border-radius: var(--border-radius-md);
+    border: 0.5px solid var(--border); background: var(--color-background-primary);
+    color: var(--text-main); width: 100%;
+  }
+
+  .qty-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 8px; margin: 10px 0; }
+  .qty-btn {
+    padding: 8px 4px; text-align: center; border: 0.5px solid var(--border);
+    border-radius: var(--border-radius-md); font-size: 13px; cursor: pointer;
+    background: var(--color-background-primary); color: var(--text-main);
+  }
+  .qty-btn.selected { border-color: var(--saffron); color: var(--saffron); background: var(--saffron-light); }
+
+  .order-summary {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--saffron-light); border-radius: var(--border-radius-md);
+    padding: 12px 16px; margin-top: 12px;
+  }
+  .order-total { font-size: 18px; font-weight: 500; color: var(--saffron-dark); }
+
+  .qr-box {
+    border: 0.5px solid var(--border); border-radius: var(--border-radius-lg);
+    padding: 1.5rem; text-align: center; margin-bottom: 10px;
+  }
+  .qr-placeholder {
+    width: 80px; height: 80px; background: var(--color-background-secondary);
+    border-radius: 8px; margin: 0 auto 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; color: var(--text-muted);
+  }
+
+  .success-screen { text-align: center; padding: 2rem; }
+  .success-icon { font-size: 40px; color: #3B6D11; margin-bottom: 12px; }
+  .shiv-id {
+    background: var(--saffron-light); border: 0.5px solid var(--saffron);
+    border-radius: var(--border-radius-md); padding: 10px 20px;
+    font-size: 15px; font-weight: 500; color: var(--saffron-dark);
+    display: inline-block; margin: 12px 0;
+  }
+
+  /* ADMIN PANEL */
+  .admin-layout { display: grid; grid-template-columns: 56px 1fr; gap: 0; min-height: 420px; }
+  .admin-sidebar {
+    background: var(--saffron-dark); border-radius: var(--border-radius-lg) 0 0 var(--border-radius-lg);
+    padding: 12px 0; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .sidebar-item {
+    width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center;
+    justify-content: center; font-size: 18px; color: rgba(255,255,255,0.6);
+    cursor: pointer;
+  }
+  .sidebar-item.active { background: rgba(255,255,255,0.15); color: #fff; }
+  .admin-main {
+    background: var(--color-background-primary);
+    border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
+    border: 0.5px solid var(--border); border-left: none;
+    overflow: hidden;
+  }
+  .admin-topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px; border-bottom: 0.5px solid var(--border);
+    background: var(--color-background-secondary);
+  }
+  .admin-metrics { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; padding: 12px; }
+  .admin-metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 12px; }
+  .admin-metric-label { font-size: 11px; color: var(--text-muted); }
+  .admin-metric-val { font-size: 18px; font-weight: 500; color: var(--saffron); }
+
+  .reg-table-wrap { padding: 0 12px 12px; overflow-x: auto; }
+  table.reg-table { width: 100%; font-size: 12px; border-collapse: collapse; min-width: 520px; }
+  table.reg-table th {
+    text-align: left; font-weight: 500; color: var(--text-muted); font-size: 11px;
+    padding: 7px 8px; border-bottom: 0.5px solid var(--border); white-space: nowrap;
+  }
+  table.reg-table td {
+    padding: 8px 8px; border-bottom: 0.5px solid var(--border); vertical-align: middle;
+  }
+  table.reg-table tr:last-child td { border-bottom: none; }
+  .icon-btn { background: none; border: none; cursor: pointer; font-size: 15px; padding: 2px 4px; }
+
+  /* OFFICE REGISTRATION */
+  .office-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .section-head { font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .payment-chips { display: flex; gap: 8px; margin-top: 6px; }
+  .pay-chip {
+    padding: 6px 14px; border-radius: 20px; font-size: 12px; cursor: pointer;
+    border: 0.5px solid var(--border); background: var(--color-background-primary);
+  }
+  .pay-chip.selected { background: var(--saffron-light); border-color: var(--saffron); color: var(--saffron-dark); }
+
+  .amount-display {
+    background: var(--gold-light); border-radius: var(--border-radius-md); padding: 12px;
+    margin: 12px 0; text-align: center;
+  }
+  .amount-big { font-size: 24px; font-weight: 500; color: var(--gold); }
+
+  .print-btn {
+    background: var(--maroon); color: #fff; border: none;
+    padding: 10px 20px; border-radius: var(--border-radius-md);
+    font-size: 13px; font-weight: 500; cursor: pointer; width: 100%;
+    margin-top: 12px;
+  }
+  .wa-btn {
+    background: #25D366; color: #fff; border: none;
+    padding: 10px 20px; border-radius: var(--border-radius-md);
+    font-size: 13px; font-weight: 500; cursor: pointer; width: 100%;
+    margin-top: 6px; display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+
+  /* Notifications msg templates */
+  .msg-card {
+    border: 0.5px solid var(--border); border-radius: var(--border-radius-lg);
+    overflow: hidden; margin-bottom: 10px;
+  }
+  .msg-header {
+    background: var(--saffron-light); padding: 8px 14px;
+    font-size: 12px; font-weight: 500; color: var(--saffron-dark);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .msg-body { padding: 12px 14px; font-size: 12px; line-height: 1.7; color: var(--text-main); }
+  .msg-var { color: var(--saffron); font-weight: 500; }
+
+  .section-divider { margin: 1rem 0; border: none; border-top: 0.5px solid var(--border); }
+</style>
+
+<h2 class="sr-only">Shri 1008 Awadhoot Bhagwan Ashram — UI Mockups for all portal screens</h2>
+
+<div style="padding: 0.5rem 0;">
+
+<div class="tab-bar" id="tabBar">
+  <button class="tab active" onclick="showTab('devotee')">Devotee Dashboard</button>
+  <button class="tab" onclick="showTab('home')">Homepage</button>
+  <button class="tab" onclick="showTab('reg')">Registration</button>
+  <button class="tab" onclick="showTab('office')">Office Portal</button>
+  <button class="tab" onclick="showTab('admin')">Admin Panel</button>
+  <button class="tab" onclick="showTab('templates')">Message Templates</button>
+</div>
+
+<!-- ===================== DEVOTEE DASHBOARD ===================== -->
+<div class="screen active" id="screen-devotee">
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div style="font-size:18px; color:var(--saffron);" aria-hidden="true"><i class="ti ti-om"></i></div>
+      <div>
+        <div style="font-size:13px; font-weight:500;">Shri 1008 Awadhoot Bhagwan Ashram</div>
+        <div style="font-size:11px; color:var(--text-muted);">Devotee Portal</div>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <div style="position:relative;">
+        <i class="ti ti-bell" style="font-size:18px; color:var(--text-muted);" aria-label="Notifications"></i>
+        <span style="position:absolute; top:-4px; right:-4px; width:8px; height:8px; border-radius:50%; background:var(--saffron);"></span>
+      </div>
+      <div class="avatar">RD</div>
+      <span style="font-size:13px; font-weight:500;">Ramesh Devraj</span>
+      <i class="ti ti-logout" style="font-size:16px; color:var(--text-muted); cursor:pointer;" aria-label="Logout"></i>
+    </div>
+  </div>
+
+  <div class="metrics-row">
+    <div class="metric-card">
+      <div class="metric-label">Shivlingas Sponsored</div>
+      <div class="metric-value saffron">11</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Certificates Available</div>
+      <div class="metric-value gold">11</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Placed</div>
+      <div class="metric-value" style="color:#3B6D11;">8</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Pending</div>
+      <div class="metric-value" style="color:#854F0B;">3</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:1rem;">
+    <div style="font-size:13px; font-weight:500; margin-bottom:10px;">My Shivlingas</div>
+    <div style="overflow-x:auto;">
+      <table class="shiv-table">
+        <thead>
+          <tr>
+            <th>Shivlinga ID</th>
+            <th>Sponsored On</th>
+            <th>Status</th>
+            <th>Photo</th>
+            <th>Certificate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code style="font-size:11px;">SHIV-2024-0041</code></td>
+            <td>12 Jan 2024</td>
+            <td><span class="status-badge badge-placed">Placed</span></td>
+            <td><div class="photo-thumb" title="View placement photo">🪨</div></td>
+            <td><button class="outline-btn" style="padding:4px 10px; font-size:12px;"><i class="ti ti-download" aria-hidden="true"></i> Download</button></td>
+          </tr>
+          <tr>
+            <td><code style="font-size:11px;">SHIV-2024-0042</code></td>
+            <td>12 Jan 2024</td>
+            <td><span class="status-badge badge-placed">Placed</span></td>
+            <td><div class="photo-thumb">🪨</div></td>
+            <td><button class="outline-btn" style="padding:4px 10px; font-size:12px;"><i class="ti ti-download" aria-hidden="true"></i> Download</button></td>
+          </tr>
+          <tr>
+            <td><code style="font-size:11px;">SHIV-2024-0043</code></td>
+            <td>12 Jan 2024</td>
+            <td><span class="status-badge badge-pending">Pending</span></td>
+            <td><span style="font-size:12px; color:var(--text-muted);">—</span></td>
+            <td><button class="outline-btn" style="padding:4px 10px; font-size:12px;"><i class="ti ti-download" aria-hidden="true"></i> Download</button></td>
+          </tr>
+          <tr>
+            <td><code style="font-size:11px;">SHIV-2024-0044</code></td>
+            <td>12 Jan 2024</td>
+            <td><span class="status-badge badge-registered">Registered</span></td>
+            <td><span style="font-size:12px; color:var(--text-muted);">—</span></td>
+            <td><button class="outline-btn" style="padding:4px 10px; font-size:12px;"><i class="ti ti-download" aria-hidden="true"></i> Download</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+    <div class="card">
+      <div style="font-size:13px; font-weight:500; margin-bottom:10px;"><i class="ti ti-bell" aria-hidden="true" style="color:var(--saffron);"></i> Notifications</div>
+      <div class="notif-item">
+        <i class="ti ti-brand-whatsapp notif-icon" aria-hidden="true"></i>
+        <div>
+          <div style="font-size:13px;">Shivlinga SHIV-2024-0042 sthapit ho gaya!</div>
+          <div class="notif-time">WhatsApp · 2 days ago</div>
+        </div>
+      </div>
+      <div class="notif-item">
+        <i class="ti ti-mail notif-icon" aria-hidden="true"></i>
+        <div>
+          <div style="font-size:13px;">Certificate ready for download</div>
+          <div class="notif-time">Email · 5 days ago</div>
+        </div>
+      </div>
+      <div class="notif-item">
+        <i class="ti ti-brand-whatsapp notif-icon" aria-hidden="true"></i>
+        <div>
+          <div style="font-size:13px;">Registration confirmed — Har Har Mahadev!</div>
+          <div class="notif-time">WhatsApp · 12 Jan 2024</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="font-size:13px; font-weight:500; margin-bottom:10px;"><i class="ti ti-user-edit" aria-hidden="true" style="color:var(--saffron);"></i> Profile</div>
+      <div class="form-group" style="margin-bottom:8px;">
+        <div class="form-label">Full name</div>
+        <input class="form-input" value="Ramesh Devraj" style="font-size:13px; padding:6px 10px;">
+      </div>
+      <div class="form-group" style="margin-bottom:8px;">
+        <div class="form-label">Mobile</div>
+        <input class="form-input" value="+91 98765 43210" style="font-size:13px; padding:6px 10px;">
+      </div>
+      <div class="form-group" style="margin-bottom:8px;">
+        <div class="form-label">City</div>
+        <input class="form-input" value="Nagpur, Maharashtra" style="font-size:13px; padding:6px 10px;">
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding-top:10px; border-top:0.5px solid var(--border);">
+        <div style="font-size:12px; color:var(--text-muted);">Total donated: <span style="font-weight:500; color:var(--saffron-dark);">₹12,100</span></div>
+        <button class="saffron-btn" style="padding:6px 14px; font-size:12px;">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== HOMEPAGE ===================== -->
+<div class="screen" id="screen-home">
+  <div class="hero-section">
+    <div class="hero-devanagari">ॐ नमः शिवाय</div>
+    <div class="hero-english">Shri 1008 Awadhoot Bhagwan Ashram, Bhilai</div>
+    <div style="font-size:15px; color:rgba(255,255,255,0.9); margin-bottom:12px; position:relative; font-weight:500;">
+      1008 Shivlinga Sthapana Yagna
+    </div>
+    <div class="hero-counter"><span>4,821</span> Shivlingas Sponsored So Far</div>
+    <br><br>
+    <button class="hero-cta">Sponsor Now — ₹1,100</button>
+  </div>
+
+  <div class="mission-grid">
+    <div class="mission-card">
+      <div class="mission-icon"><i class="ti ti-flame" aria-hidden="true"></i></div>
+      <div class="mission-title">Spiritual Significance</div>
+      <div class="mission-desc">Each Shivlinga represents divine consciousness. Sponsoring one earns eternal merit for you and your family.</div>
+    </div>
+    <div class="mission-card">
+      <div class="mission-icon"><i class="ti ti-list-check" aria-hidden="true"></i></div>
+      <div class="mission-title">How It Works</div>
+      <div class="mission-desc">Register online or at the ashram. Pay ₹1,100 per Shivlinga. Receive your certificate and placement photo.</div>
+    </div>
+    <div class="mission-card">
+      <div class="mission-icon"><i class="ti ti-heart-handshake" aria-hidden="true"></i></div>
+      <div class="mission-title">Your Impact</div>
+      <div class="mission-desc">Every Shivlinga is installed on 23-acre sacred land and blessed in daily puja by ashram sevakas.</div>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat-item"><div class="stat-num">4,821</div><div class="stat-label">Shivlingas Sponsored</div></div>
+    <div class="stat-item"><div class="stat-num">18</div><div class="stat-label">States Reached</div></div>
+    <div class="stat-item"><div class="stat-num">1,240</div><div class="stat-label">Devotees Joined</div></div>
+    <div class="stat-item"><div class="stat-num">7</div><div class="stat-label">Years Running</div></div>
+  </div>
+
+  <div class="testimonial-card">
+    <div class="testi-quote" id="testiText">"Shivlinga sponsor karne ke baad ghar mein sukh-shanti ayi. Ashram ki seva aur dedication dekh ke dil bhar aata hai."</div>
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <div class="testi-author">
+        <div class="avatar" style="width:28px;height:28px;font-size:11px;">SP</div>
+        <div>
+          <div style="font-size:13px; font-weight:500;">Sunita Patel</div>
+          <div style="font-size:11px; color:var(--text-muted);">Indore, MP</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:6px;">
+        <div class="testi-dot" onclick="rotateTesti(0)"></div>
+        <div class="testi-dot inactive" onclick="rotateTesti(1)"></div>
+        <div class="testi-dot inactive" onclick="rotateTesti(2)"></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+  <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0;">
+    <div style="font-size:12px; color:var(--text-muted);">© Shri 1008 Awadhoot Bhagwan Ashram · Bhilai, Chhattisgarh</div>
+    <div style="display:flex; gap:12px; font-size:16px; color:var(--text-muted);">
+      <i class="ti ti-brand-whatsapp" aria-label="WhatsApp"></i>
+      <i class="ti ti-brand-instagram" aria-label="Instagram"></i>
+      <i class="ti ti-brand-youtube" aria-label="YouTube"></i>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== REGISTRATION ===================== -->
+<div class="screen" id="screen-reg">
+  <div id="regStep1">
+    <div class="steps-bar" style="margin-bottom:1.5rem;">
+      <div class="step-item">
+        <div class="step-num active">1</div>
+        <div class="step-line done"></div>
+      </div>
+      <div class="step-item">
+        <div class="step-num todo">2</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-item">
+        <div class="step-num todo">3</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-num todo">4</div>
+    </div>
+    <div style="font-size:14px; font-weight:500; margin-bottom:14px;">Personal details</div>
+    <div class="form-row">
+      <div class="form-group">
+        <div class="form-label">Full name (as on certificate)</div>
+        <input class="form-input" placeholder="Enter your full name">
+      </div>
+      <div class="form-group">
+        <div class="form-label">Mobile number</div>
+        <input class="form-input" placeholder="+91 XXXXX XXXXX">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <div class="form-label">Email address</div>
+        <input class="form-input" placeholder="your@email.com">
+      </div>
+      <div class="form-group">
+        <div class="form-label">City</div>
+        <input class="form-input" placeholder="City">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <div class="form-label">State</div>
+        <input class="form-input" placeholder="State">
+      </div>
+      <div class="form-group">
+        <div class="form-label">Pincode</div>
+        <input class="form-input" placeholder="XXXXXX">
+      </div>
+    </div>
+    <button class="saffron-btn" style="margin-top:12px;" onclick="showRegStep(2)">Next — Choose Shivlingas</button>
+  </div>
+
+  <div id="regStep2" style="display:none;">
+    <div style="font-size:14px; font-weight:500; margin-bottom:14px;">Select number of Shivlingas</div>
+    <div class="qty-grid" id="qtyGrid">
+      <div class="qty-btn selected" data-qty="1" onclick="selectQty(this,1)">1</div>
+      <div class="qty-btn" data-qty="5" onclick="selectQty(this,5)">5</div>
+      <div class="qty-btn" data-qty="11" onclick="selectQty(this,11)">11</div>
+      <div class="qty-btn" data-qty="21" onclick="selectQty(this,21)">21</div>
+      <div class="qty-btn" data-qty="51" onclick="selectQty(this,51)">51</div>
+      <div class="qty-btn" data-qty="101" onclick="selectQty(this,101)">101</div>
+    </div>
+    <div style="margin-top:8px; display:flex; gap:8px; align-items:center;">
+      <div class="form-label">Custom quantity:</div>
+      <input class="form-input" id="customQty" placeholder="Enter number" style="max-width:140px; padding:6px 10px;" oninput="updateTotal(this.value)">
+    </div>
+    <div class="order-summary">
+      <div>
+        <div style="font-size:12px; color:var(--saffron-dark); margin-bottom:2px;">Order total</div>
+        <div id="qtyDisplay" style="font-size:13px; color:var(--saffron-dark);">1 Shivlinga × ₹1,100</div>
+      </div>
+      <div class="order-total" id="totalDisplay">₹1,100</div>
+    </div>
+    <div style="margin-top:10px; font-size:12px; color:var(--text-muted); margin-bottom:12px; padding:10px; background:var(--color-background-secondary); border-radius:var(--border-radius-md);">
+      <i class="ti ti-info-circle" aria-hidden="true"></i> Dedication (optional) — you may dedicate this sponsorship in memory of a loved one or for the wellbeing of your family.
+    </div>
+    <input class="form-input" placeholder="e.g. In memory of Shri Ramkumar Sharma / For wellbeing of Sharma family" style="margin-bottom:12px;">
+    <div style="display:flex; gap:8px;">
+      <button class="outline-btn" onclick="showRegStep(1)">Back</button>
+      <button class="saffron-btn" onclick="showRegStep(3)">Continue to Payment</button>
+    </div>
+  </div>
+
+  <div id="regStep3" style="display:none;">
+    <div style="font-size:14px; font-weight:500; margin-bottom:14px;">Payment</div>
+    <div class="qr-box">
+      <div class="qr-placeholder"><i class="ti ti-qrcode" aria-hidden="true"></i></div>
+      <div style="font-size:13px; font-weight:500; margin-bottom:4px;">Scan UPI QR Code</div>
+      <div style="font-size:12px; color:var(--text-muted);">UPI ID: ashram1008@upi</div>
+    </div>
+    <div style="text-align:center; font-size:12px; color:var(--text-muted); margin:8px 0;">— or pay with —</div>
+    <button class="saffron-btn" style="width:100%; margin-bottom:6px;">Pay ₹1,100 via Razorpay</button>
+    <button class="outline-btn" style="width:100%;" onclick="showRegStep(4)">I have made payment — Continue</button>
+  </div>
+
+  <div id="regStep4" style="display:none;">
+    <div class="success-screen">
+      <div class="success-icon"><i class="ti ti-circle-check" aria-hidden="true"></i></div>
+      <div style="font-size:16px; font-weight:500; margin-bottom:6px;">Jai Mahadev! 🙏</div>
+      <div style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">Your Shivlinga Sthapana Sankalp is confirmed.</div>
+      <div class="shiv-id">SHIV-2024-4822</div>
+      <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:12px;">
+        <button class="saffron-btn"><i class="ti ti-download" aria-hidden="true"></i> Download Certificate</button>
+        <button style="background:#25D366; color:#fff; border:none; padding:8px 16px; border-radius:var(--border-radius-md); font-size:13px; cursor:pointer;"><i class="ti ti-brand-whatsapp" aria-hidden="true"></i> Share on WhatsApp</button>
+      </div>
+      <div style="margin-top:16px; font-size:12px; color:var(--text-muted);">A confirmation has been sent to your WhatsApp and email.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== OFFICE PORTAL ===================== -->
+<div class="screen" id="screen-office">
+  <div style="font-size:14px; font-weight:500; margin-bottom:14px;"><i class="ti ti-building-community" aria-hidden="true" style="color:var(--saffron);"></i> Office Registration — Walk-in Devotee</div>
+  <div class="office-grid">
+    <div>
+      <div class="section-head">Devotee details</div>
+      <div class="form-group" style="margin-bottom:8px;">
+        <div class="form-label">Full name</div>
+        <input class="form-input" placeholder="Devotee's name">
+      </div>
+      <div class="form-group" style="margin-bottom:8px;">
+        <div class="form-label">Mobile number</div>
+        <input class="form-input" placeholder="+91 XXXXX XXXXX">
+      </div>
+      <div class="form-group" style="margin-bottom:8px;">
+        <div class="form-label">Email (optional)</div>
+        <input class="form-input" placeholder="email@example.com">
+      </div>
+      <div class="form-group" style="margin-bottom:8px;">
+        <div class="form-label">Address</div>
+        <input class="form-input" placeholder="City, State">
+      </div>
+      <div class="form-group" style="margin-bottom:8px;">
+        <div class="form-label">No. of Shivlingas</div>
+        <input class="form-input" type="number" placeholder="1" min="1" id="officeQty" oninput="officeCalc(this.value)">
+      </div>
+      <div class="form-group">
+        <div class="form-label">Dedication note (optional)</div>
+        <input class="form-input" placeholder="In memory of / For wellbeing of ...">
+      </div>
+    </div>
+
+    <div>
+      <div class="section-head">Payment</div>
+      <div class="form-label" style="margin-bottom:6px;">Payment method</div>
+      <div class="payment-chips">
+        <div class="pay-chip selected" onclick="selPay(this)">Cash</div>
+        <div class="pay-chip" onclick="selPay(this)">UPI</div>
+        <div class="pay-chip" onclick="selPay(this)">Bank Transfer</div>
+      </div>
+      <div class="amount-display" style="margin-top:16px;">
+        <div style="font-size:12px; color:#854F0B; margin-bottom:4px;">Total amount</div>
+        <div class="amount-big" id="officeTotal">₹1,100</div>
+      </div>
+      <div class="form-group" style="margin-bottom:8px;">
+        <div class="form-label">Receipt number</div>
+        <input class="form-input" placeholder="Auto-generated on save">
+      </div>
+      <button class="print-btn"><i class="ti ti-printer" aria-hidden="true"></i> Register &amp; Print Receipt</button>
+      <button class="wa-btn"><i class="ti ti-brand-whatsapp" aria-hidden="true"></i> Send via WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ADMIN PANEL ===================== -->
+<div class="screen" id="screen-admin">
+  <div class="admin-layout">
+    <div class="admin-sidebar">
+      <div style="font-size:14px; color:rgba(255,255,255,0.8); padding:8px 0; margin-bottom:8px;">
+        <i class="ti ti-om" aria-hidden="true"></i>
+      </div>
+      <div class="sidebar-item active" title="Dashboard"><i class="ti ti-layout-dashboard" aria-hidden="true"></i></div>
+      <div class="sidebar-item" title="Registrations"><i class="ti ti-users" aria-hidden="true"></i></div>
+      <div class="sidebar-item" title="Upload Photos"><i class="ti ti-photo-up" aria-hidden="true"></i></div>
+      <div class="sidebar-item" title="Analytics"><i class="ti ti-chart-bar" aria-hidden="true"></i></div>
+      <div class="sidebar-item" title="Notifications"><i class="ti ti-bell" aria-hidden="true"></i></div>
+      <div class="sidebar-item" title="Settings" style="margin-top:auto;"><i class="ti ti-settings" aria-hidden="true"></i></div>
+    </div>
+    <div class="admin-main">
+      <div class="admin-topbar">
+        <div style="font-size:13px; font-weight:500;">Admin Panel</div>
+        <div style="font-size:12px; color:var(--text-muted);">Last updated: 2 min ago · <span style="color:#3B6D11;">● 3 staff online</span></div>
+      </div>
+      <div class="admin-metrics">
+        <div class="admin-metric">
+          <div class="admin-metric-label">Today's registrations</div>
+          <div class="admin-metric-val">24</div>
+        </div>
+        <div class="admin-metric">
+          <div class="admin-metric-label">Today's revenue</div>
+          <div class="admin-metric-val">₹26,400</div>
+        </div>
+        <div class="admin-metric">
+          <div class="admin-metric-label">Pending placements</div>
+          <div class="admin-metric-val" style="color:#854F0B;">187</div>
+        </div>
+        <div class="admin-metric">
+          <div class="admin-metric-label">Total sponsored</div>
+          <div class="admin-metric-val">4,821</div>
+        </div>
+      </div>
+      <div class="reg-table-wrap">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; padding:0 0 6px; border-bottom:0.5px solid var(--border);">
+          <div style="font-size:13px; font-weight:500;">Recent registrations</div>
+          <button class="saffron-btn" style="padding:5px 12px; font-size:12px;"><i class="ti ti-plus" aria-hidden="true"></i> Add New</button>
+        </div>
+        <table class="reg-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Mobile</th>
+              <th>Shivlingas</th>
+              <th>Amount</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>4822</td>
+              <td>Meena Sharma</td>
+              <td>98001 11234</td>
+              <td>5</td>
+              <td>₹5,500</td>
+              <td>07 May</td>
+              <td><span class="status-badge badge-registered">Registered</span></td>
+              <td>
+                <button class="icon-btn" title="View"><i class="ti ti-eye" aria-hidden="true"></i></button>
+                <button class="icon-btn" title="Upload photo"><i class="ti ti-photo-up" aria-hidden="true"></i></button>
+                <button class="icon-btn" title="WhatsApp"><i class="ti ti-brand-whatsapp" aria-hidden="true"></i></button>
+              </td>
+            </tr>
+            <tr>
+              <td>4821</td>
+              <td>Arvind Verma</td>
+              <td>90123 45678</td>
+              <td>11</td>
+              <td>₹12,100</td>
+              <td>07 May</td>
+              <td><span class="status-badge badge-placed">Placed</span></td>
+              <td>
+                <button class="icon-btn" title="View"><i class="ti ti-eye" aria-hidden="true"></i></button>
+                <button class="icon-btn" title="Upload photo"><i class="ti ti-photo-up" aria-hidden="true"></i></button>
+                <button class="icon-btn" title="WhatsApp"><i class="ti ti-brand-whatsapp" aria-hidden="true"></i></button>
+              </td>
+            </tr>
+            <tr>
+              <td>4820</td>
+              <td>Kavita Singh</td>
+              <td>97654 32109</td>
+              <td>1</td>
+              <td>₹1,100</td>
+              <td>06 May</td>
+              <td><span class="status-badge badge-pending">Pending</span></td>
+              <td>
+                <button class="icon-btn" title="View"><i class="ti ti-eye" aria-hidden="true"></i></button>
+                <button class="icon-btn" title="Upload photo"><i class="ti ti-photo-up" aria-hidden="true"></i></button>
+                <button class="icon-btn" title="WhatsApp"><i class="ti ti-brand-whatsapp" aria-hidden="true"></i></button>
+              </td>
+            </tr>
+            <tr>
+              <td>4819</td>
+              <td>Suresh Rao</td>
+              <td>88888 76543</td>
+              <td>21</td>
+              <td>₹23,100</td>
+              <td>05 May</td>
+              <td><span class="status-badge badge-placed">Placed</span></td>
+              <td>
+                <button class="icon-btn" title="View"><i class="ti ti-eye" aria-hidden="true"></i></button>
+                <button class="icon-btn" title="Upload photo"><i class="ti ti-photo-up" aria-hidden="true"></i></button>
+                <button class="icon-btn" title="WhatsApp"><i class="ti ti-brand-whatsapp" aria-hidden="true"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MESSAGE TEMPLATES ===================== -->
+<div class="screen" id="screen-templates">
+  <div style="font-size:14px; font-weight:500; margin-bottom:14px;"><i class="ti ti-message-circle" aria-hidden="true" style="color:var(--saffron);"></i> WhatsApp Message Templates</div>
+
+  <div class="msg-card">
+    <div class="msg-header"><i class="ti ti-check-circle" aria-hidden="true"></i> Template 1 — Registration Confirmation</div>
+    <div class="msg-body">
+      🙏 ॐ नमः शिवाय - Jai Mahadev!<br><br>
+      Priya <span class="msg-var">[Devotee Name]</span> Ji,<br>
+      Aapka Shivlinga Sthapana Sankalp safaltapurvak prapt hua hai.<br><br>
+      Shivlinga ID: <span class="msg-var">SHIV-2024-XXXXXXX</span><br>
+      Sponsored Shivlingas: <span class="msg-var">[X]</span> | Amount: ₹<span class="msg-var">[AMOUNT]</span><br><br>
+      Aapka certificate download karein: <span class="msg-var">[LINK]</span><br><br>
+      Har Har Mahadev! 🙏<br>
+      — Shri 1008 Awadhoot Bhagwan Ashram, Bhilai
+    </div>
+  </div>
+
+  <div class="msg-card">
+    <div class="msg-header"><i class="ti ti-map-pin" aria-hidden="true"></i> Template 2 — Placement Confirmation (with Photo)</div>
+    <div class="msg-body">
+      ✨ Aapka Shivlinga Sthapit Ho Gaya!<br><br>
+      Priya <span class="msg-var">[Name]</span> Ji - ek baar phir Jai Mahadev!<br><br>
+      Aapke Shivlinga (ID: <span class="msg-var">SHIV-2024-XXXXXXX</span>) ki sthapana 23-acre divya bhumi par safaltapurvak ho gayi hai.<br><br>
+      Placement Photo: <span class="msg-var">[IMAGE ATTACHED]</span><br><br>
+      Aapka dashboard mein status 'Sthapit' ho gaya hai.<br>
+      Dashboard: <span class="msg-var">[LINK]</span><br><br>
+      Har Har Mahadev! 🙏
+    </div>
+  </div>
+
+  <div style="display:flex; gap:10px; margin-top:4px;">
+    <button class="outline-btn" style="flex:1;"><i class="ti ti-plus" aria-hidden="true"></i> Add Template</button>
+    <button class="saffron-btn" style="flex:1;"><i class="ti ti-send" aria-hidden="true"></i> Send Test Message</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+function showRegStep(n) {
+  [1,2,3,4].forEach(i => {
+    const el = document.getElementById('regStep' + i);
+    if (el) el.style.display = (i === n) ? 'block' : 'none';
+  });
+}
+
+let selectedQty = 1;
+function selectQty(el, qty) {
+  document.querySelectorAll('#qtyGrid .qty-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedQty = qty;
+  document.getElementById('customQty').value = '';
+  document.getElementById('qtyDisplay').textContent = qty + ' Shivlinga' + (qty > 1 ? 's' : '') + ' × ₹1,100';
+  document.getElementById('totalDisplay').textContent = '₹' + (qty * 1100).toLocaleString('en-IN');
+}
+
+function updateTotal(val) {
+  const qty = parseInt(val) || 0;
+  if (qty > 0) {
+    document.querySelectorAll('#qtyGrid .qty-btn').forEach(b => b.classList.remove('selected'));
+    selectedQty = qty;
+    document.getElementById('qtyDisplay').textContent = qty + ' Shivlinga' + (qty > 1 ? 's' : '') + ' × ₹1,100';
+    document.getElementById('totalDisplay').textContent = '₹' + (qty * 1100).toLocaleString('en-IN');
+  }
+}
+
+function officeCalc(val) {
+  const qty = parseInt(val) || 1;
+  document.getElementById('officeTotal').textContent = '₹' + (qty * 1100).toLocaleString('en-IN');
+}
+
+function selPay(el) {
+  document.querySelectorAll('.pay-chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+const testis = [
+  { text: '"Shivlinga sponsor karne ke baad ghar mein sukh-shanti ayi. Ashram ki seva aur dedication dekh ke dil bhar aata hai."', name: 'Sunita Patel', city: 'Indore, MP', initials: 'SP' },
+  { text: '"Maine 11 Shivlingas sponsor kiye apni maa ki smriti mein. Photo dekhkar aankhein bhar aayi. Ashram ka bahut bahut dhanyavaad."', name: 'Rajesh Gupta', city: 'Raipur, CG', initials: 'RG' },
+  { text: '"Online registration bahut aasan tha. Certificate bhi turant mila. Ye punya ka kaam sach mein dil ko sukoon deta hai."', name: 'Anita Joshi', city: 'Nagpur, MH', initials: 'AJ' }
+];
+function rotateTesti(i) {
+  const t = testis[i];
+  document.getElementById('testiText').textContent = t.text;
+  document.querySelectorAll('.testi-dot').forEach((d,j) => {
+    d.classList.toggle('inactive', j !== i);
+  });
+}
+</script>
